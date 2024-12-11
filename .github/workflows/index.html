@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<!-- Created with https://studio.penguinmod.com/PenguinMod-Packager/ -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- We only include this to explicitly loosen the CSP of various packager environments. It does not provide any security. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
+  <title>Youh&apos;s Dumpster</title>
+  <style>
+    body {
+      color: #ffffff;
+      font-family: sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    :root, body.is-fullscreen {
+      background-color: #000000;
+    }
+    [hidden] {
+      display: none !important;
+    }
+    h1 {
+      font-weight: normal;
+    }
+    a {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    #app, #loading, #error, #launch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+      background-color: #000000;
+    }
+    #launch {
+      background-color: rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+    }
+    .green-flag {
+      width: 80px;
+      height: 80px;
+      padding: 16px;
+      border-radius: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      border: 3px solid hsla(0, 100%, 100%, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    #loading {
+      
+    }
+    .progress-bar-outer {
+      border: 1px solid currentColor;
+      height: 10px;
+      width: 200px;
+      max-width: 200px;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0;
+      background-color: currentColor;
+    }
+    .loading-text, noscript {
+      font-weight: normal;
+      font-size: 36px;
+      margin: 0 0 16px;
+    }
+    .loading-image {
+      margin: 0 0 16px;
+    }
+    #error-message, #error-stack {
+      font-family: monospace;
+      max-width: 600px;
+      white-space: pre-wrap;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    #error-stack {
+      text-align: left;
+      max-height: 200px;
+      overflow: auto;
+    }
+    .control-button {
+      width: 2rem;
+      height: 2rem;
+      padding: 0.375rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer;
+      border: 0;
+      border-radius: 4px;
+    }
+    .control-button:hover {
+      background: #00c3ff26;
+    }
+    .control-button.active {
+      background: #00c3ff59;
+    }
+    .fullscreen-button {
+      background: white !important;
+    }
+    .standalone-fullscreen-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 0 0 0 4px;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .sc-canvas {
+      cursor: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNyIgaGVpZ2h0PSIxNyIgdmlld0JveD0iMCwwLDE3LDE3Ij48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzExLjUsLTE3MS41KSI+PGcgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCI+PHBhdGggZD0iTTMxMi41LDE4MGMwLC00LjE0MjE0IDMuMzU3ODcsLTcuNSA3LjUsLTcuNWM0LjE0MjE0LDAgNy41LDMuMzU3ODcgNy41LDcuNWMwLDQuMTQyMTQgLTMuMzU3ODcsNy41IC03LjUsNy41Yy00LjE0MjE0LDAgLTcuNSwtMy4zNTc4NyAtNy41LC03LjV6Ii8+PC9nPjwvZz48L3N2Zz48IS0tcm90YXRpb25DZW50ZXI6OC41MDAwMDMzMzMzMzMzMjU6OC41MDAwMDMzMzMzMzMzNTMtLT4=) 0 0, auto;
+    }
+    .sc-monitor-root[data-opcode^="data_"] .sc-monitor-value-color {
+      background-color: #ff8c1a;
+    }
+    .sc-monitor-row-value-outer {
+      background-color: #fc662c;
+    }
+    .sc-monitor-row-value-editing .sc-monitor-row-value-outer {
+      background-color: #e25b27;
+    }
+    
+  </style>
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/gif;base64,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">
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="launch" class="screen" hidden title="Click to start">
+    <div class="green-flag">
+      <svg viewBox="0 0 16.63 17.5" width="42" height="44">
+        <defs><style>.cls-1,.cls-2{fill:#007AF4;stroke:#003080;stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-width:1.5px;}</style></defs>
+        <path class="cls-1" d="M.75,2A6.44,6.44,0,0,1,8.44,2h0a6.44,6.44,0,0,0,7.69,0V12.4a6.44,6.44,0,0,1-7.69,0h0a6.44,6.44,0,0,0-7.69,0"/>
+        <line class="cls-2" x1="0.75" y1="16.75" x2="0.75" y2="0.75"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="loading" class="screen">
+    <noscript>Enable JavaScript</noscript>
+    <h1 class="loading-text">Please wait, we are loading...</h1>
+    <div class="loading-image"><img src="data:image/gif;base64,R0lGODdhZABkAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJMgAAACwAAAAAZABkAIIAAAAAAACPVjvZoGbuw5r///8AAAAAAAAD/wi63P4wykmrvTjrzbv/YCiOZGmeaKqubOu+cCzPdG3feK7vfO//wGBhWAiuiEiikZRsNpcbp3RahEqoWKp1ke16hd5weCcum6uxczgQUCtZ7i6bPWDH38w7dR4Y+P91c3ogelN8gIiJfHEehUh8BJGRiZSIgmochZCSnJ2Vn4timW5zA52nqASfoJdYo2KHiKmzkqusrlFypba0vaq2lnZOr06xwIC+vavGbU+5j7vHn8m0f3x9ilLPBXTS3tSnxqDaGkTY0d68vteTx83OGebB2OmrqJue7uTxQ/Tz/vX+Bagm7V2SZwApofN2iBrDfRceMezGaqHDh/AiyquHTv8cpWTpDOLR2C+gtYX2lIUcxq+kSWv1OPnJh/FgS24vYaaTObPWyowWJOasE7BdT6MFWWJIkjBk0URIkyoNKvRlU5O/fgKlwHQoUa9WIVZgKmDoVbDARI4c+0hAWatoTaodcpOb27cBz8YdN5Wtubtw92q1SbLfXbxOBQ9ey7Xt4byKF9Nd6hgwx8g1kdQNcNjtZcz6tk4g29lzQdChRUcgXRqxLb2o64gdXbn16dh8VUNgbdsd7tyE/Rpubfn170pz0QgfTty1wuMKZ1/h3XsZ9Gx9p1Ovjvy6Jem7m3BuXvy5d2vgHxQj/7j7efS6HaxnXx4Q7NhzC/+l397Sez+8+VG1HX2K/CdbduFBw19p/v2XnIAKLtiZTu89uFyEEpp2H2bCxMcAFmxk6NmGcYWSXgO6iMgZbq3gQpsX4y0YY39etahFXXvMSJ6OzU3UoYvEgMhjaUOKWJaNN44AY5F3MckfklOosGRzThJnYhYvwGilhFBGSUMWIXZW5ZVY5gDmjEV26aUPQrqlo5oI/tCmAGQCuQUAQpZxp3Zu7AnhGH6WU2agHZxIaEuHJqrooow26uijkEYq6aSQJgAAIfkECTIAAAAsAAAAAGQAZACCAAAAAAAAj1Y72aBm7sOa////AAAAAAAAA/8Iutz+MMpJq7046827/2AojmRpnmiqrmzrvnAsz3Rt33iu73zv/8CgcEgsGo/IpDJWaC5DzajU+bRMr1hqlZHterXHr3hcEJLPaB16zQa32uxAAB5N0ddy+UB+l4r6ZHkBA4SFe3mAZR2JXYKGj5CCgBuMUoIEmJiQm4+IdxmMl5mjpJymkmygd3kDpK6vBKannmOqeKyPsLqZsrO1GGeOvbvEsb2dfF22WcLHhsXEss1zWctRzc6c0LuFgoORysCW39nZ267YnNRYy9+45cfQ3prO61ftyOTwpq+ipfXhrFhS925fJH+vytmbIu7asYIKWW1TWK1hE329IB6EOJH/4j2LBTDW09NNY65i8Ba6oTBFZESSzlCmZAfSZcp9owj988iwpsFOOHnpFMrTj8+f3QzSG7o0m0pFF67YdKoUUlOnNKO2REpoKk6DT62F5NqVLNmwIEMKOGuWK1qtlgSsReq1rbSsAuPKpWv359u81+TOBdsXLN4KUgUPvll4n0qxARQvptp4Zk+4gRUTrlx05YTEkh1z7gwV8EXJghWOxnrZtFrUeymvvtuaZUvYqR/WXZ3MKObXuGOfmp2x4u/IwXOrI0774/HkmpczP3XYdmbowoFOV1f9s17syg3t5t1dwm3w0cVv3/QX8TXk6MPvWQ/OuWk58UOXpS++PARmlPDltx9/h/j3H4D57TVeX6gYGEEjAYIXGXO0GMdBI/lFmN1ZvVkIAoISovfSU7X9AWJyGiaoYIcB2XEibinGV2GLb7woWYwozkgjDBjChiNqOu44A4RAQtegGD4QKViMQQrJg5IRNulkklBK6aERXrD4yxaJbPEAHV4+mEaY1k1J5oH2ndmQmmy26eabcMYp55w6JAAAOw=="></div>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="loading-inner"></div></div>
+  </div>
+
+  <div id="error" class="screen" hidden>
+    <h1>Error</h1>
+    <details>
+      <summary id="error-message"></summary>
+      <p id="error-stack"></p>
+    </details>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const appElement = document.getElementById('app');
+    const launchScreen = document.getElementById('launch');
+    const loadingScreen = document.getElementById('loading');
+    const loadingInner = document.getElementById('loading-inner');
+    const errorScreen = document.getElementById('error');
+    const errorScreenMessage = document.getElementById('error-message');
+    const errorScreenStack = document.getElementById('error-stack');
+
+    const handleError = (error) => {
+      console.error(error);
+      if (!errorScreen.hidden) return;
+      errorScreen.hidden = false;
+      errorScreenMessage.textContent = '' + error;
+      let debug = error && error.stack || 'no stack';
+      debug += '\nUser agent: ' + navigator.userAgent;
+      errorScreenStack.textContent = debug;
+    };
+    const setProgress = (progress) => {
+      if (loadingInner) loadingInner.style.width = progress * 100 + '%';
+    };
+    const interpolate = (a, b, t) => a + t * (b - a);
+
+    try {
+      setProgress(0.1);
+
+      const scaffolding = new Scaffolding.Scaffolding();
+      scaffolding.width = 640;
+      scaffolding.height = 360;
+      scaffolding.resizeMode = "preserve-ratio";
+      scaffolding.editableLists = false;
+      scaffolding.usePackagedRuntime = true;
+      scaffolding.setup();
+      scaffolding.appendTo(appElement);
+
+      const vm = scaffolding.vm;
+      window.scaffolding = scaffolding;
+      window.vm = scaffolding.vm;
+      window.Scratch = {
+        vm,
+        renderer: vm.renderer,
+        audioEngine: vm.runtime.audioEngine,
+        bitmapAdapter: vm.runtime.v2BitmapAdapter,
+        videoProvider: vm.runtime.ioDevices.video.provider
+      };
+
+      scaffolding.setUsername("player####".replace(/#/g, () => Math.floor(Math.random() * 10)));
+      scaffolding.setAccentColor("#00c3ff");
+
+      try {
+        scaffolding.addCloudProvider(new Scaffolding.Cloud.WebSocketProvider(["wss://clouddata.turbowarp.org","wss://clouddata.turbowarp.xyz"], "p4-@dumpster fire.pmp"));
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+        let isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        const fullscreenButton = document.createElement('img');
+        fullscreenButton.draggable = false;
+        fullscreenButton.className = 'control-button fullscreen-button';
+        fullscreenButton.addEventListener('click', () => {
+          if (isFullScreen) {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            }
+          } else {
+            if (document.body.requestFullscreen) {
+              document.body.requestFullscreen();
+            } else if (document.body.webkitRequestFullscreen) {
+              document.body.webkitRequestFullscreen();
+            }
+          }
+        });
+        const otherControlsExist = false;
+        const fillColor = otherControlsExist ? '#575E75' : '#ffffff';
+        const updateFullScreen = () => {
+          isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+          document.body.classList.toggle('is-fullscreen', isFullScreen);
+          if (isFullScreen) {
+            fullscreenButton.src = 'data:image/svg+xml,' + encodeURIComponent('<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="' + fillColor + '" fill-rule="evenodd"><path d="M12.662 3.65l.89.891 3.133-2.374a.815.815 0 011.15.165.819.819 0 010 .986L15.467 6.46l.867.871c.25.25.072.664-.269.664L12.388 8A.397.397 0 0112 7.611V3.92c0-.341.418-.514.662-.27M7.338 16.35l-.89-.89-3.133 2.374a.817.817 0 01-1.15-.166.819.819 0 010-.985l2.37-3.143-.87-.871a.387.387 0 01.27-.664L7.612 12a.397.397 0 01.388.389v3.692a.387.387 0 01-.662.27M7.338 3.65l-.89.891-3.133-2.374a.815.815 0 00-1.15.165.819.819 0 000 .986l2.37 3.142-.87.871a.387.387 0 00.27.664L7.612 8A.397.397 0 008 7.611V3.92a.387.387 0 00-.662-.27M12.662 16.35l.89-.89 3.133 2.374a.817.817 0 001.15-.166.819.819 0 000-.985l-2.368-3.143.867-.871a.387.387 0 00-.269-.664L12.388 12a.397.397 0 00-.388.389v3.692c0 .342.418.514.662.27"/></g></svg>');
+          } else {
+            fullscreenButton.src = 'data:image/svg+xml,' + encodeURIComponent('<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="' + fillColor + '" fill-rule="evenodd"><path d="M16.338 7.35l-.89-.891-3.133 2.374a.815.815 0 01-1.15-.165.819.819 0 010-.986l2.368-3.142-.867-.871a.387.387 0 01.269-.664L16.612 3a.397.397 0 01.388.389V7.08a.387.387 0 01-.662.27M3.662 12.65l.89.89 3.133-2.374a.817.817 0 011.15.166.819.819 0 010 .985l-2.37 3.143.87.871c.248.25.071.664-.27.664L3.388 17A.397.397 0 013 16.611V12.92c0-.342.418-.514.662-.27M3.662 7.35l.89-.891 3.133 2.374a.815.815 0 001.15-.165.819.819 0 000-.986L6.465 4.54l.87-.871a.387.387 0 00-.27-.664L3.388 3A.397.397 0 003 3.389V7.08c0 .341.418.514.662.27M16.338 12.65l-.89.89-3.133-2.374a.817.817 0 00-1.15.166.819.819 0 000 .985l2.368 3.143-.867.871a.387.387 0 00.269.664l3.677.005a.397.397 0 00.388-.389V12.92a.387.387 0 00-.662-.27"/></g></svg>');
+          }
+        };
+        updateFullScreen();
+        document.addEventListener('fullscreenchange', updateFullScreen);
+        document.addEventListener('webkitfullscreenchange', updateFullScreen);
+        if (otherControlsExist) {
+          fullscreenButton.className = 'control-button fullscreen-button';
+          scaffolding.addControlButton({
+            element: fullscreenButton,
+            where: 'top-right'
+          });
+        } else {
+          fullscreenButton.className = 'standalone-fullscreen-button';
+          document.body.appendChild(fullscreenButton);
+        }
+      }
+
+      vm.setTurboMode(false);
+      if (vm.setInterpolation) vm.setInterpolation(false);
+      if (vm.setFramerate) vm.setFramerate(30);
+      if (vm.renderer.setUseHighQualityRender) vm.renderer.setUseHighQualityRender(false);
+      if (vm.setRuntimeOptions) vm.setRuntimeOptions({
+        fencing: true,
+        miscLimits: true,
+        maxClones: 300,
+        dangerousOptimizations: false
+      });
+      if (vm.setCompilerOptions) vm.setCompilerOptions({
+        enabled: true,
+        warpTimer: true
+      });
+      if (vm.renderer.setMaxTextureDimension) vm.renderer.setMaxTextureDimension(2048);
+
+      if (typeof ScaffoldingAddons !== 'undefined') {
+        ScaffoldingAddons.run(scaffolding, {"gamepad":false,"pointerlock":false,"specialCloudBehaviors":false,"unsafeCloudBehaviors":false,"pause":false});
+      }
+
+      scaffolding.setExtensionSecurityManager({
+        getSandboxMode: () => 'unsandboxed',
+        canLoadExtensionFromProject: () => true
+      });
+      for (const extension of ["data:text/javascript;,(function(Scratch)%20%7B%20%2F%2F%20Name%3A%20Mouse%20Cursor%0A%2F%2F%20ID%3A%20MouseCursor%0A%2F%2F%20Description%3A%20Use%20custom%20cursors%20or%20hide%20the%20cursor.%20Also%20allows%20replacing%20the%20cursor%20with%20any%20costume%20image.%0A%2F%2F%20License%3A%20MIT%20AND%20MPL-2.0%0A%0A%2F*%20generated%20l10n%20code%20*%2FScratch.translate.setup(%7B%22de%22%3A%7B%22_Mouse%20Cursor%22%3A%22Mauszeiger%22%7D%2C%22fi%22%3A%7B%22_Mouse%20Cursor%22%3A%22Hiiren%20kohdistin%22%2C%22_bottom%20left%22%3A%22vasempaan%20alakulmaan%22%2C%22_bottom%20right%22%3A%22oikeaan%20alakulmaan%22%2C%22_center%22%3A%22keskelle%22%2C%22_cursor%22%3A%22kohdistin%22%2C%22_hide%20cursor%22%3A%22piilota%20kohdistin%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22aseta%20kohdistimeksi%20%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22aseta%20kohdistimeksi%20nykyisen%20asusteen%20keskikohta%3A%20%5Bposition%5D%20enimm%C3%A4iskoko%3A%20%5Bsize%5D%22%2C%22_top%20left%22%3A%22vasempaan%20yl%C3%A4kulmaan%22%2C%22_top%20right%22%3A%22oikeaan%20yl%C3%A4kulmaan%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(ep%C3%A4luotettava)%22%7D%2C%22it%22%3A%7B%22_Mouse%20Cursor%22%3A%22Puntatore%20Mouse%22%2C%22_bottom%20left%22%3A%22angolo%20sinistra%20in%20basso%22%2C%22_bottom%20right%22%3A%22angolo%20destra%20in%20basso%22%2C%22_center%22%3A%22centro%22%2C%22_cursor%22%3A%22puntatore%22%2C%22_hide%20cursor%22%3A%22nascondi%20puntatore%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22usa%20%5Bcur%5D%20come%20puntatore%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22usa%20il%20costume%20attuale%20con%20centro%3A%20%5Bposition%5D%20dimensione%20massima%3A%20%5Bsize%5D%20come%20puntatore%22%2C%22_top%20left%22%3A%22angolo%20sinistra%20in%20alto%22%2C%22_top%20right%22%3A%22angolo%20destra%20in%20alto%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(inaffidabile)%22%7D%2C%22ja%22%3A%7B%22_Mouse%20Cursor%22%3A%22%E3%83%9E%E3%82%A6%E3%82%B9%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%22%2C%22_bottom%20left%22%3A%22%E5%B7%A6%E4%B8%8B%22%2C%22_bottom%20right%22%3A%22%E5%8F%B3%E4%B8%8B%22%2C%22_center%22%3A%22%E4%B8%AD%E5%A4%AE%22%2C%22_cursor%22%3A%22%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%22%2C%22_hide%20cursor%22%3A%22%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E9%9A%A0%E3%81%99%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%5Bcur%5D%E3%81%AB%E3%81%99%E3%82%8B%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E3%80%81%E4%B8%AD%E5%A4%AE%5Bposition%5D%E6%9C%80%E5%A4%A7%E3%82%B5%E3%82%A4%E3%82%BA%5Bsize%5D%E3%81%A7%E4%BB%8A%E3%81%AE%E3%82%B3%E3%82%B9%E3%83%81%E3%83%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%81%99%E3%82%8B%22%2C%22_top%20left%22%3A%22%E5%B7%A6%E4%B8%8A%22%2C%22_top%20right%22%3A%22%E5%8F%B3%E4%B8%8A%22%7D%2C%22ko%22%3A%7B%22_Mouse%20Cursor%22%3A%22%EB%A7%88%EC%9A%B0%EC%8A%A4%20%EC%BB%A4%EC%84%9C%22%2C%22_bottom%20left%22%3A%22%EC%99%BC%EC%AA%BD%20%EC%95%84%EB%9E%98%22%2C%22_bottom%20right%22%3A%22%EC%98%A4%EB%A5%B8%EC%AA%BD%20%EC%95%84%EB%9E%98%22%2C%22_center%22%3A%22%EA%B0%80%EC%9A%B4%EB%8D%B0%22%2C%22_cursor%22%3A%22%EC%BB%A4%EC%84%9C%22%2C%22_hide%20cursor%22%3A%22%EC%BB%A4%EC%84%9C%20%EC%88%A8%EA%B8%B0%EA%B8%B0%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22%EC%BB%A4%EC%84%9C%EB%A5%BC%20%5Bcur%5D(%EC%9C%BC)%EB%A1%9C%20%EC%A0%95%ED%95%98%EA%B8%B0%22%2C%22_top%20left%22%3A%22%EC%99%BC%EC%AA%BD%20%EC%9C%84%22%2C%22_top%20right%22%3A%22%EC%98%A4%EB%A5%B8%EC%AA%BD%20%EC%9C%84%22%7D%2C%22nb%22%3A%7B%22_Mouse%20Cursor%22%3A%22Mus%20Pekkeren%22%2C%22_bottom%20left%22%3A%22nederst%20til%20venstre%22%2C%22_bottom%20right%22%3A%22nederst%20til%20h%C3%B8yre%22%2C%22_center%22%3A%22senter%22%2C%22_cursor%22%3A%22pekeren%22%2C%22_hide%20cursor%22%3A%22skjul%20pekeren%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22sett%20mark%C3%B8ren%20til%20%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22sett%20mark%C3%B8ren%20til%20midten%20av%20gjeldende%20drakt%3A%20%5Bposition%5D%20maks%20st%C3%B8rrelse%3A%20%5Bsize%5D%22%2C%22_top%20left%22%3A%22%C3%B8verst%20til%20venstre%22%2C%22_top%20right%22%3A%22%C3%B8verst%20til%20h%C3%B8yre%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(up%C3%A5litelig)%22%7D%2C%22nl%22%3A%7B%22_Mouse%20Cursor%22%3A%22Muisaanwijzer%22%2C%22_bottom%20left%22%3A%22linksonder%22%2C%22_bottom%20right%22%3A%22rechtsonder%22%2C%22_center%22%3A%22midden%22%2C%22_hide%20cursor%22%3A%22verberg%20cursor%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22maak%20cursor%20%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22maak%20cursor%20huidig%20uiterlijk%20met%20middelpunt%3A%20%5Bposition%5D%20en%20max.%20grootte%3A%20%5Bsize%5D%22%2C%22_top%20left%22%3A%22linksboven%22%2C%22_top%20right%22%3A%22rechtsboven%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(onbetrouwbaar)%22%7D%2C%22ru%22%3A%7B%22_Mouse%20Cursor%22%3A%22%D0%9A%D1%83%D1%80%D1%81%D0%BE%D1%80%20%D0%9C%D1%8B%D1%88%D0%B8%22%2C%22_bottom%20left%22%3A%22%D0%BD%D0%B8%D0%B6%D0%BD%D0%B5%D0%BC%20%D0%BB%D0%B5%D0%B2%D0%BE%D0%BC%20%D1%83%D0%B3%D0%BB%D1%83%22%2C%22_bottom%20right%22%3A%22%D0%BD%D0%B8%D0%B6%D0%BD%D0%B5%D0%BC%20%D0%BF%D1%80%D0%B0%D0%B2%D0%BE%D0%BC%20%D1%83%D0%B3%D0%BB%D1%83%22%2C%22_center%22%3A%22%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B5%22%2C%22_cursor%22%3A%22%D0%BA%D1%83%D1%80%D1%81%D0%BE%D1%80%22%2C%22_hide%20cursor%22%3A%22%D1%81%D0%BF%D1%80%D1%8F%D1%82%D0%B0%D1%82%D1%8C%20%D0%BA%D1%83%D1%80%D1%81%D0%BE%D1%80%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B8%D1%82%D1%8C%20%D0%BA%D1%83%D1%80%D1%81%D0%BE%D1%80%20%D0%BD%D0%B0%20%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B8%D1%82%D1%8C%20%D0%BA%D1%83%D1%80%D1%81%D0%BE%D1%80%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D0%B9%20%D0%BA%D0%BE%D1%81%D1%82%D1%8E%D0%BC%20%D1%81%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%BE%D0%BC%20%D0%B2%3A%20%5Bposition%5D%20%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BC%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%BC%20%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%80%D0%BE%D0%BC%3A%20%5Bsize%5D%22%2C%22_top%20left%22%3A%22%D0%B2%D0%B5%D1%80%D1%85%D0%BD%D0%B5%D0%BC%20%D0%BB%D0%B5%D0%B2%D0%BE%D0%BC%20%D1%83%D0%B3%D0%BB%D1%83%22%2C%22_top%20right%22%3A%22%D0%B2%D0%B5%D1%80%D1%85%D0%BD%D0%B5%D0%BC%20%D0%BF%D1%80%D0%B0%D0%B2%D0%BE%D0%BC%20%D1%83%D0%B3%D0%BB%D1%83%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(%D0%BD%D0%B5%D0%BD%D0%B0%D0%B4%D0%B5%D0%B6%D0%BD%D0%BE)%22%7D%2C%22uk%22%3A%7B%22_Mouse%20Cursor%22%3A%22%D0%92%D0%BA%D0%B0%D0%B7%D1%96%D0%B2%D0%BD%D0%B8%D0%BA%20%D0%9C%D0%B8%D1%88%D1%96%22%2C%22_bottom%20left%22%3A%22%D0%B7%D0%BB%D1%96%D0%B2%D0%B0%20%D0%B7%D0%BD%D0%B8%D0%B7%D1%83%22%2C%22_bottom%20right%22%3A%22%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%B0%20%D0%B7%D0%BD%D0%B8%D0%B7%D1%83%22%2C%22_center%22%3A%22%D1%86%D0%B5%D0%BD%D1%82%D1%80%22%2C%22_cursor%22%3A%22%D0%B2%D0%BA%D0%B0%D0%B7%D1%96%D0%B2%D0%BD%D0%B8%D0%BA%22%2C%22_hide%20cursor%22%3A%22%D1%81%D0%BE%D0%B2%D0%B0%D1%82%D0%B8%20%D0%B2%D0%BA%D0%B0%D0%B7%D1%96%D0%B2%D0%BD%D0%B8%D0%BA%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22%D0%B7%D0%BC%D1%96%D0%BD%D0%B8%D1%82%D0%B8%20%D0%B2%D0%BA%D0%B0%D0%B7%D1%96%D0%B2%D0%BD%D0%B8%D0%BA%20%D0%BD%D0%B0%20%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22%D0%B7%D0%B0%D0%BC%D1%96%D0%BD%D0%B8%D1%82%D0%B8%20%D0%B2%D0%BA%D0%B0%D0%B7%D1%96%D0%B2%D0%BD%D0%B8%D0%BA%20%D0%BD%D0%B0%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%3A%20%5Bposition%5D%20%D0%BC%D0%B0%D0%BA%D1%81.%20%D1%80%D0%BE%D0%B7%D0%BC%D1%96%D1%80%3A%20%5Bsize%5D%22%2C%22_top%20left%22%3A%22%D0%B7%D0%BB%D1%96%D0%B2%D0%B0%20%D0%B7%D0%B2%D0%B5%D1%80%D1%85%D1%83%22%2C%22_top%20right%22%3A%22%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%B0%20%D0%B7%D0%B2%D0%B5%D1%80%D1%85%D1%83%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%20(%D0%BD%D0%B5%D0%BD%D0%B0%D0%B4%D1%96%D0%B9%D0%BD%D0%BE)%22%7D%2C%22zh-cn%22%3A%7B%22_Mouse%20Cursor%22%3A%22%E9%BC%A0%E6%A0%87%E5%9B%BE%E6%A0%87%22%2C%22_bottom%20left%22%3A%22%E5%BA%95%E9%83%A8%E5%B7%A6%E4%BE%A7%22%2C%22_bottom%20right%22%3A%22%E5%BA%95%E9%83%A8%E5%8F%B3%E4%BE%A7%22%2C%22_center%22%3A%22%E5%B1%85%E4%B8%AD%22%2C%22_cursor%22%3A%22%E9%BC%A0%E6%A0%87%E6%A0%B7%E5%BC%8F%22%2C%22_hide%20cursor%22%3A%22%E9%9A%90%E8%97%8F%E9%BC%A0%E6%A0%87%22%2C%22_set%20cursor%20to%20%5Bcur%5D%22%3A%22%E8%AE%BE%E7%BD%AE%E9%BC%A0%E6%A0%87%E6%A0%B7%E5%BC%8F%E4%B8%BA%5Bcur%5D%22%2C%22_set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%3A%22%E8%AE%BE%E7%BD%AE%E9%BC%A0%E6%A0%87%E4%B8%AD%E5%BF%83%E4%B8%BA%5Bposition%5D%EF%BC%8C%E6%9C%80%E5%A4%A7%E5%B0%BA%E5%AF%B8%E4%B8%BA%5Bsize%5D%22%2C%22_top%20left%22%3A%22%E9%A1%B6%E9%83%A8%E5%B7%A6%E4%BE%A7%22%2C%22_top%20right%22%3A%22%E9%A1%B6%E9%83%A8%E5%8F%B3%E4%BE%A7%22%2C%22_%7Bsize%7D%20(unreliable)%22%3A%22%7Bsize%7D%EF%BC%88%E5%AE%9E%E9%AA%8C%E6%80%A7%EF%BC%89%22%7D%7D)%3B%2F*%20end%20generated%20l10n%20code%20*%2F(function%20(Scratch)%20%7B%0A%20%20%22use%20strict%22%3B%0A%0A%20%20if%20(!Scratch.extensions.unsandboxed)%20%7B%0A%20%20%20%20throw%20new%20Error(%22MouseCursor%20extension%20must%20be%20run%20unsandboxed%22)%3B%0A%20%20%7D%0A%0A%20%20const%20lazilyCreatedCanvas%20%3D%20()%20%3D%3E%20%7B%0A%20%20%20%20%2F**%20%40type%20%7BHTMLCanvasElement%7D%20*%2F%0A%20%20%20%20let%20canvas%20%3D%20null%3B%0A%20%20%20%20%2F**%20%40type%20%7BCanvasRenderingContext2D%7D%20*%2F%0A%20%20%20%20let%20ctx%20%3D%20null%3B%0A%20%20%20%20%2F**%0A%20%20%20%20%20*%20%40param%20%7Bnumber%7D%20width%0A%20%20%20%20%20*%20%40param%20%7Bnumber%7D%20height%0A%20%20%20%20%20*%20%40returns%20%7B%5BHTMLCanvasElement%2C%20CanvasRenderingContext2D%5D%7D%0A%20%20%20%20%20*%2F%0A%20%20%20%20return%20(width%2C%20height)%20%3D%3E%20%7B%0A%20%20%20%20%20%20if%20(!canvas)%20%7B%0A%20%20%20%20%20%20%20%20canvas%20%3D%20document.createElement(%22canvas%22)%3B%0A%20%20%20%20%20%20%20%20ctx%20%3D%20canvas.getContext(%222d%22)%3B%0A%20%20%20%20%20%20%20%20if%20(!ctx)%20%7B%0A%20%20%20%20%20%20%20%20%20%20throw%20new%20Error(%22Could%20not%20get%202d%20rendering%20context%22)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%2F%2F%20Setting%20canvas%20size%20also%20clears%20it%0A%20%20%20%20%20%20canvas.width%20%3D%20width%3B%0A%20%20%20%20%20%20canvas.height%20%3D%20height%3B%0A%20%20%20%20%20%20return%20%5Bcanvas%2C%20ctx%5D%3B%0A%20%20%20%20%7D%3B%0A%20%20%7D%3B%0A%20%20const%20getRawSkinCanvas%20%3D%20lazilyCreatedCanvas()%3B%0A%0A%20%20%2F**%0A%20%20%20*%20%40param%20%7BRenderWebGL.Skin%7D%20skin%0A%20%20%20*%20%40returns%20%7Bstring%7D%20A%20data%3A%20URI%20for%20the%20skin.%0A%20%20%20*%2F%0A%20%20const%20encodeSkinToURL%20%3D%20(skin)%20%3D%3E%20%7B%0A%20%20%20%20const%20svgSkin%20%3D%20%2F**%20%40type%20%7BRenderWebGL.SVGSkin%7D%20*%2F%20(skin)%3B%0A%20%20%20%20if%20(svgSkin._svgImage)%20%7B%0A%20%20%20%20%20%20%2F%2F%20This%20is%20an%20SVG%20skin%0A%20%20%20%20%20%20return%20svgSkin._svgImage.src%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%2F%2F%20It's%20probably%20a%20bitmap%20skin.%0A%20%20%20%20%2F%2F%20The%20most%20reliable%20way%20to%20get%20the%20bitmap%20in%20every%20runtime%20is%20through%20the%20silhouette.%0A%20%20%20%20%2F%2F%20This%20is%20very%20slow%20and%20could%20involve%20reading%20the%20texture%20from%20the%20GPU.%0A%20%20%20%20const%20silhouette%20%3D%20skin._silhouette%3B%0A%20%20%20%20%2F%2F%20unlazy()%20only%20exists%20in%20TW%0A%20%20%20%20if%20(silhouette.unlazy)%20%7B%0A%20%20%20%20%20%20silhouette.unlazy()%3B%0A%20%20%20%20%7D%0A%20%20%20%20const%20colorData%20%3D%20silhouette._colorData%3B%0A%20%20%20%20const%20width%20%3D%20silhouette._width%3B%0A%20%20%20%20const%20height%20%3D%20silhouette._height%3B%0A%20%20%20%20const%20imageData%20%3D%20new%20ImageData(%0A%20%20%20%20%20%20colorData%2C%0A%20%20%20%20%20%20silhouette._width%2C%0A%20%20%20%20%20%20silhouette._height%0A%20%20%20%20)%3B%0A%20%20%20%20const%20%5Bcanvas%2C%20ctx%5D%20%3D%20getRawSkinCanvas(width%2C%20height)%3B%0A%20%20%20%20ctx.putImageData(imageData%2C%200%2C%200)%3B%0A%20%20%20%20return%20canvas.toDataURL()%3B%0A%20%20%7D%3B%0A%0A%20%20%2F**%0A%20%20%20*%20%40param%20%7BVM.Costume%7D%20costume%0A%20%20%20*%20%40param%20%7Bnumber%7D%20maxWidth%0A%20%20%20*%20%40param%20%7Bnumber%7D%20maxHeight%0A%20%20%20*%20%40returns%20%7B%7Buri%3A%20string%2C%20width%3A%20number%2C%20height%3A%20number%7D%7D%0A%20%20%20*%2F%0A%20%20const%20costumeToCursor%20%3D%20(costume%2C%20maxWidth%2C%20maxHeight)%20%3D%3E%20%7B%0A%20%20%20%20const%20skin%20%3D%20Scratch.vm.renderer._allSkins%5Bcostume.skinId%5D%3B%0A%20%20%20%20const%20imageURI%20%3D%20encodeSkinToURL(skin)%3B%0A%0A%20%20%20%20let%20width%20%3D%20skin.size%5B0%5D%3B%0A%20%20%20%20let%20height%20%3D%20skin.size%5B1%5D%3B%0A%20%20%20%20if%20(width%20%3E%20maxWidth)%20%7B%0A%20%20%20%20%20%20height%20%3D%20height%20*%20(maxWidth%20%2F%20width)%3B%0A%20%20%20%20%20%20width%20%3D%20maxWidth%3B%0A%20%20%20%20%7D%0A%20%20%20%20if%20(height%20%3E%20maxHeight)%20%7B%0A%20%20%20%20%20%20width%20%3D%20width%20*%20(maxHeight%20%2F%20height)%3B%0A%20%20%20%20%20%20height%20%3D%20maxHeight%3B%0A%20%20%20%20%7D%0A%20%20%20%20width%20%3D%20Math.round(width)%3B%0A%20%20%20%20height%20%3D%20Math.round(height)%3B%0A%0A%20%20%20%20%2F%2F%20We%20wrap%20the%20encoded%20image%20in%20an%20%3Csvg%3E.%20This%20lets%20us%20do%20some%20clever%20things%3A%0A%20%20%20%20%2F%2F%20%20-%20We%20can%20resize%20the%20image%20without%20a%20canvas.%0A%20%20%20%20%2F%2F%20%20-%20We%20can%20give%20the%20browser%20an%20image%20with%20more%20raw%20pixels%20than%20its%20DPI%20independent%20size.%0A%20%20%20%20%2F%2F%20The%20latter%20is%20important%20so%20that%20cursors%20won't%20look%20horrible%20on%20high%20DPI%20displays.%20For%0A%20%20%20%20%2F%2F%20example%2C%20if%20the%20cursor%20will%20display%20at%2032x32%20in%20DPI%20independent%20units%20on%20a%202x%20high%20DPI%0A%20%20%20%20%2F%2F%20display%2C%20we%20actually%20need%20to%20send%20a%2064x64%20image%20for%20it%20to%20look%20good.%20This%20lets%20us%20do%0A%20%20%20%20%2F%2F%20that%20automatically.%0A%20%20%20%20let%20svg%20%3D%20%60%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22%24%7Bwidth%7D%22%20height%3D%22%24%7Bheight%7D%22%3E%60%3B%0A%20%20%20%20svg%20%2B%3D%20%60%3Cimage%20href%3D%22%24%7BimageURI%7D%22%20width%3D%22%24%7Bwidth%7D%22%20height%3D%22%24%7Bheight%7D%22%20%2F%3E%60%3B%0A%20%20%20%20svg%20%2B%3D%20%22%3C%2Fsvg%3E%22%3B%0A%20%20%20%20%2F%2F%20URI%20encoding%20usually%20results%20in%20smaller%20string%20than%20base%2064%20for%20the%20types%20of%20data%20we%20get%20here.%0A%20%20%20%20const%20svgURI%20%3D%20%60data%3Aimage%2Fsvg%2Bxml%3B%2C%24%7BencodeURIComponent(svg)%7D%60%3B%0A%0A%20%20%20%20return%20%7B%0A%20%20%20%20%20%20uri%3A%20svgURI%2C%0A%20%20%20%20%20%20width%2C%0A%20%20%20%20%20%20height%2C%0A%20%20%20%20%7D%3B%0A%20%20%7D%3B%0A%0A%20%20%2F**%20%40type%20%7Bstring%7D%20*%2F%0A%20%20let%20nativeCursor%20%3D%20%22default%22%3B%0A%20%20%2F**%20%40type%20%7Bnull%7Cstring%7D%20*%2F%0A%20%20let%20customCursorImageName%20%3D%20null%3B%0A%0A%20%20const%20canvas%20%3D%20Scratch.renderer.canvas%3B%0A%20%20%2F**%20%40type%20%7Bstring%7D%20*%2F%0A%20%20let%20currentCanvasCursor%20%3D%20nativeCursor%3B%0A%20%20const%20updateCanvasCursor%20%3D%20()%20%3D%3E%20%7B%0A%20%20%20%20if%20(canvas.style.cursor%20!%3D%3D%20currentCanvasCursor)%20%7B%0A%20%20%20%20%20%20canvas.style.cursor%20%3D%20currentCanvasCursor%3B%0A%20%20%20%20%7D%0A%20%20%7D%3B%0A%0A%20%20%2F%2F%20scratch-gui%20will%20sometimes%20reset%20the%20cursor%20when%20resizing%20the%20window%20or%20going%20in%2Fout%20of%20fullscreen%0A%20%20new%20MutationObserver(updateCanvasCursor).observe(canvas%2C%20%7B%0A%20%20%20%20attributeFilter%3A%20%5B%22style%22%5D%2C%0A%20%20%20%20attributes%3A%20true%2C%0A%20%20%7D)%3B%0A%0A%20%20%2F**%0A%20%20%20*%20Parse%20strings%20like%20%2260x12%22%20or%20%2277%2C1%22%0A%20%20%20*%20%40param%20%7Bstring%7D%20string%0A%20%20%20*%20%40returns%20%7B%5Bnumber%2C%20number%5D%7D%0A%20%20%20*%2F%0A%20%20const%20parseTuple%20%3D%20(string)%20%3D%3E%20%7B%0A%20%20%20%20const%20%5Ba%2C%20b%5D%20%3D%20(%22%22%20%2B%20string).split(%2F%5B%20%2Cx%5D%2F)%3B%0A%20%20%20%20return%20%5B%2Ba%20%7C%7C%200%2C%20%2Bb%20%7C%7C%200%5D%3B%0A%20%20%7D%3B%0A%0A%20%20%2F**%0A%20%20%20*%20%40param%20%7Bstring%7D%20size%20eg.%20%2248x84%22%0A%20%20%20*%20%40returns%20%7Bstring%7D%0A%20%20%20*%2F%0A%20%20const%20formatUnreliableSize%20%3D%20(size)%20%3D%3E%0A%20%20%20%20Scratch.translate(%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20default%3A%20%22%7Bsize%7D%20(unreliable)%22%2C%0A%20%20%20%20%20%20%20%20description%3A%20%22%5Bsize%5D%20is%20replaced%20with%20a%20size%20in%20pixels%20such%20as%20'48x48'%22%2C%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%7B%20size%20%7D%0A%20%20%20%20)%3B%0A%0A%20%20const%20cursors%20%3D%20%5B%0A%20%20%20%20%22default%22%2C%0A%20%20%20%20%22pointer%22%2C%0A%20%20%20%20%22move%22%2C%0A%20%20%20%20%22grab%22%2C%0A%20%20%20%20%22grabbing%22%2C%0A%20%20%20%20%22text%22%2C%0A%20%20%20%20%22vertical-text%22%2C%0A%20%20%20%20%22wait%22%2C%0A%20%20%20%20%22progress%22%2C%0A%20%20%20%20%22help%22%2C%0A%20%20%20%20%22context-menu%22%2C%0A%20%20%20%20%22zoom-in%22%2C%0A%20%20%20%20%22zoom-out%22%2C%0A%20%20%20%20%22crosshair%22%2C%0A%20%20%20%20%22cell%22%2C%0A%20%20%20%20%22not-allowed%22%2C%0A%20%20%20%20%22copy%22%2C%0A%20%20%20%20%22alias%22%2C%0A%20%20%20%20%22no-drop%22%2C%0A%20%20%20%20%22all-scroll%22%2C%0A%20%20%20%20%22col-resize%22%2C%0A%20%20%20%20%22row-resize%22%2C%0A%20%20%20%20%22n-resize%22%2C%0A%20%20%20%20%22e-resize%22%2C%0A%20%20%20%20%22s-resize%22%2C%0A%20%20%20%20%22w-resize%22%2C%0A%20%20%20%20%22ne-resize%22%2C%0A%20%20%20%20%22nw-resize%22%2C%0A%20%20%20%20%22se-resize%22%2C%0A%20%20%20%20%22sw-resize%22%2C%0A%20%20%20%20%22ew-resize%22%2C%0A%20%20%20%20%22ns-resize%22%2C%0A%20%20%20%20%22nesw-resize%22%2C%0A%20%20%20%20%22nwse-resize%22%2C%0A%20%20%5D%3B%0A%0A%20%20class%20MouseCursor%20%7B%0A%20%20%20%20constructor()%20%7B%0A%20%20%20%20%20%20Scratch.vm.runtime.on(%22RUNTIME_DISPOSED%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20this.setCur(%7B%0A%20%20%20%20%20%20%20%20%20%20cur%3A%20%22default%22%2C%0A%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20getInfo()%20%7B%0A%20%20%20%20%20%20return%20%7B%0A%20%20%20%20%20%20%20%20id%3A%20%22MouseCursor%22%2C%0A%20%20%20%20%20%20%20%20name%3A%20Scratch.translate(%22Mouse%20Cursor%22)%2C%0A%20%20%20%20%20%20%20%20blocks%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20opcode%3A%20%22setCur%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20blockType%3A%20Scratch.BlockType.COMMAND%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20text%3A%20Scratch.translate(%22set%20cursor%20to%20%5Bcur%5D%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20arguments%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20cur%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20Scratch.ArgumentType.STRING%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20defaultValue%3A%20%22pointer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20menu%3A%20%22cursors%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20opcode%3A%20%22setCursorImage%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20blockType%3A%20Scratch.BlockType.COMMAND%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20text%3A%20Scratch.translate(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22set%20cursor%20to%20current%20costume%20center%3A%20%5Bposition%5D%20max%20size%3A%20%5Bsize%5D%22%0A%20%20%20%20%20%20%20%20%20%20%20%20)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20arguments%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20position%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20Scratch.ArgumentType.STRING%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20defaultValue%3A%20%220%2C0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20menu%3A%20%22imagePositions%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20size%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20Scratch.ArgumentType.STRING%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20defaultValue%3A%20%2232x32%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20menu%3A%20%22imageSizes%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20opcode%3A%20%22hideCur%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20blockType%3A%20Scratch.BlockType.COMMAND%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20text%3A%20Scratch.translate(%22hide%20cursor%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20opcode%3A%20%22getCur%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20blockType%3A%20Scratch.BlockType.REPORTER%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20text%3A%20Scratch.translate(%22cursor%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20menus%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20cursors%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20acceptReporters%3A%20true%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20items%3A%20cursors%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20imagePositions%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20acceptReporters%3A%20true%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20items%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20%5Bx%2C%20y%5D%20where%20x%20is%20%5B0%3Dleft%2C%20100%3Dright%5D%20and%20y%20is%20%5B0%3Dtop%2C%20100%3Dbottom%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20Scratch.translate(%22top%20left%22)%2C%20value%3A%20%220%2C0%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20Scratch.translate(%22top%20right%22)%2C%20value%3A%20%22100%2C0%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20Scratch.translate(%22bottom%20left%22)%2C%20value%3A%20%220%2C100%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20Scratch.translate(%22bottom%20right%22)%2C%20value%3A%20%22100%2C100%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20Scratch.translate(%22center%22)%2C%20value%3A%20%2250%2C50%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20imageSizes%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20acceptReporters%3A%20true%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20items%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20Some%20important%20numbers%20to%20keep%20in%20mind%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20Browsers%20ignore%20cursor%20images%20%3E128%20in%20any%20dimension%20(https%3A%2F%2Fsearchfox.org%2Fmozilla-central%2Frev%2F43ee5e789b079e94837a21336e9ce2420658fd19%2Fwidget%2Fgtk%2FnsWindow.cpp%233393-3402)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20Browsers%20may%20refuse%20to%20display%20a%20cursor%20near%20window%20borders%20for%20images%20%3E32%20in%20any%20dimension%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20%224x4%22%2C%20value%3A%20%224x4%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20%228x8%22%2C%20value%3A%20%228x4%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20%2212x12%22%2C%20value%3A%20%2212x12%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20%2216x16%22%2C%20value%3A%20%2216x16%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20%2232x32%22%2C%20value%3A%20%2232x32%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20formatUnreliableSize(%2248x48%22)%2C%20value%3A%20%2248x48%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20formatUnreliableSize(%2264x64%22)%2C%20value%3A%20%2264x64%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%20text%3A%20formatUnreliableSize(%22128x128%22)%2C%20value%3A%20%22128x128%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%7D%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20setCur(args)%20%7B%0A%20%20%20%20%20%20const%20newCursor%20%3D%20Scratch.Cast.toString(args.cur)%3B%0A%20%20%20%20%20%20%2F%2F%20Prevent%20setting%20cursor%20to%20%22url(...)%2C%20default%22%20from%20causing%20fetch.%0A%20%20%20%20%20%20if%20(cursors.includes(newCursor)%20%7C%7C%20newCursor%20%3D%3D%3D%20%22none%22)%20%7B%0A%20%20%20%20%20%20%20%20nativeCursor%20%3D%20newCursor%3B%0A%20%20%20%20%20%20%20%20customCursorImageName%20%3D%20null%3B%0A%20%20%20%20%20%20%20%20currentCanvasCursor%20%3D%20newCursor%3B%0A%20%20%20%20%20%20%20%20updateCanvasCursor()%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20setCursorImage(args%2C%20util)%20%7B%0A%20%20%20%20%20%20const%20%5BmaxWidth%2C%20maxHeight%5D%20%3D%20parseTuple(args.size).map((i)%20%3D%3E%0A%20%20%20%20%20%20%20%20Math.max(0%2C%20i)%0A%20%20%20%20%20%20)%3B%0A%0A%20%20%20%20%20%20const%20currentCostume%20%3D%0A%20%20%20%20%20%20%20%20util.target.getCostumes()%5Butil.target.currentCostume%5D%3B%0A%20%20%20%20%20%20const%20costumeName%20%3D%20currentCostume.name%3B%0A%0A%20%20%20%20%20%20let%20encodedCostume%3B%0A%20%20%20%20%20%20try%20%7B%0A%20%20%20%20%20%20%20%20encodedCostume%20%3D%20costumeToCursor(currentCostume%2C%20maxWidth%2C%20maxHeight)%3B%0A%20%20%20%20%20%20%7D%20catch%20(e)%20%7B%0A%20%20%20%20%20%20%20%20%2F%2F%20This%20could%20happen%20for%20a%20variety%20of%20reasons.%0A%20%20%20%20%20%20%20%20console.error(e)%3B%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20if%20(encodedCostume)%20%7B%0A%20%20%20%20%20%20%20%20const%20%5BpercentX%2C%20percentY%5D%20%3D%20parseTuple(args.position).map(%0A%20%20%20%20%20%20%20%20%20%20(i)%20%3D%3E%20Math.max(0%2C%20Math.min(100%2C%20i))%20%2F%20100%0A%20%20%20%20%20%20%20%20)%3B%0A%20%20%20%20%20%20%20%20const%20x%20%3D%20percentX%20*%20encodedCostume.width%3B%0A%20%20%20%20%20%20%20%20const%20y%20%3D%20percentY%20*%20encodedCostume.height%3B%0A%0A%20%20%20%20%20%20%20%20currentCanvasCursor%20%3D%20%60url(%22%24%7BencodedCostume.uri%7D%22)%20%24%7Bx%7D%20%24%7By%7D%2C%20%24%7BnativeCursor%7D%60%3B%0A%20%20%20%20%20%20%20%20updateCanvasCursor()%3B%0A%20%20%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20%2F%2F%20If%20for%20some%20reason%20the%20costume%20couldn't%20be%20encoded%2C%20we'll%20leave%20the%20cursor%20unchanged.%0A%20%20%20%20%20%20%20%20%2F%2F%20This%20is%20the%20same%20behavior%20that%20would%20happen%20if%20we%20successfully%20encode%20a%20cursor%20but%20the%20browser%0A%20%20%20%20%20%20%20%20%2F%2F%20is%20unable%20to%20parse%20it%20for%20some%20reason.%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20customCursorImageName%20%3D%20costumeName%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20hideCur()%20%7B%0A%20%20%20%20%20%20this.setCur(%7B%0A%20%20%20%20%20%20%20%20cur%3A%20%22none%22%2C%0A%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20getCur()%20%7B%0A%20%20%20%20%20%20if%20(customCursorImageName%20!%3D%3D%20null)%20%7B%0A%20%20%20%20%20%20%20%20return%20customCursorImageName%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20return%20nativeCursor%3B%0A%20%20%20%20%7D%0A%20%20%7D%0A%0A%20%20Scratch.extensions.register(new%20MouseCursor())%3B%0A%7D)(Scratch)%3B%0A%20%7D)(Scratch)%3B"]) {
+        vm.extensionManager.loadExtensionURL(extension);
+      }
+
+    } catch (e) {
+      handleError(e);
+    }
+  </script>
+  
+  
+    <script>
+      const getProjectData = (function() {
+        const storage = scaffolding.storage;
+        storage.onprogress = (total, loaded) => {
+          setProgress(interpolate(0.2, 0.98, loaded / total));
+        };
+        
+        storage.addWebStore(
+          [
+            storage.AssetType.ImageVector,
+            storage.AssetType.ImageBitmap,
+            storage.AssetType.Sound,
+            storage.AssetType.Font
+          ].filter(i => i),
+          (asset) => new URL('./assets/' + asset.assetId + '.' + asset.dataFormat, location).href
+        );
+        return () => new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        };
+        xhr.onerror = () => {
+          if (location.protocol === 'file:') {
+            reject(new Error('Zip environment must be used from a website, not from a file URL.'));
+          } else {
+            reject(new Error('Request to load project data failed.'));
+          }
+        };
+        xhr.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setProgress(interpolate(0.1, 0.2, e.loaded / e.total));
+          }
+        };
+        xhr.responseType = 'arraybuffer';
+        xhr.open('GET', "./assets/project.json");
+        xhr.send();
+      });
+      })();
+    </script>
+  <script>
+    const run = async () => {
+      const projectData = await getProjectData();
+      await scaffolding.loadProject(projectData);
+      setProgress(1);
+      loadingScreen.hidden = true;
+      if (true) {
+        scaffolding.start();
+      } else {
+        launchScreen.hidden = false;
+        launchScreen.addEventListener('click', () => {
+          launchScreen.hidden = true;
+          scaffolding.start();
+        });
+        launchScreen.focus();
+      }
+    };
+    run().catch(handleError);
+  </script>
+</body>
+</html>
